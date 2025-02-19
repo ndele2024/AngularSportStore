@@ -5,7 +5,7 @@ import { StaticDataSource } from "./static.datasource";
 export class ProductRepository {
   private products: Product[] = [];
   private categories: string[] = [];
-  constructor(private dataSource: StaticDataSource) { //infection of StaticDataSource class
+  constructor(private dataSource: StaticDataSource)  { //injection of StaticDataSource class
     //asynchronous set the instance variable of class
     dataSource.getProducts().subscribe(data => {
       this.products = data;
