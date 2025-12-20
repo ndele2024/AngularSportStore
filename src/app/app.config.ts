@@ -10,6 +10,8 @@ import {Order} from './model/order.model';
 import {OrderRepository} from './model/order.repository';
 import {RestDataSource} from './model/rest.datasource';
 import {provideHttpClient} from '@angular/common/http';
+import {AuthenticationService} from './model/authentication.service';
+import {AuthGuard} from './admin/auth.guard';
 
 export const appConfig = {
   providers: [
@@ -20,8 +22,11 @@ export const appConfig = {
     StaticDataSource,
     CartModel,
     StoreFirstGuard,
+    AuthGuard,
     Order,
     OrderRepository,
-    { provide: StaticDataSource, useClass: RestDataSource }
+    { provide: StaticDataSource, useClass: RestDataSource },
+    RestDataSource,
+    AuthenticationService
   ]
 };

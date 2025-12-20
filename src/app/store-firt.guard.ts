@@ -11,7 +11,7 @@ export class StoreFirstGuard {
     if (this.firstNavigation) {
       this.firstNavigation = false;
       if (route.component != StoreComponent) {
-        this.router.navigateByUrl("/");
+        this.router.navigateByUrl("/store");
         return false;
       }
     }

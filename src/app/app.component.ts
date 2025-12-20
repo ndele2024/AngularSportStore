@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {StoreComponent} from './store/store.component';
+//import {StoreComponent} from './store/store.component';
 
 @Component({
   selector: 'app',
-  imports: [RouterOutlet, StoreComponent],
+  imports: [RouterOutlet,],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.css'

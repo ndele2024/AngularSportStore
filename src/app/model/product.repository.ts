@@ -1,18 +1,25 @@
 import { Injectable } from "@angular/core";
 import { Product } from "./product.model";
-import { StaticDataSource } from "./static.datasource";
+//import { StaticDataSource } from "./static.datasource";
+import {RestDataSource} from './rest.datasource';
 @Injectable()
 export class ProductRepository {
   private products: Product[] = [];
   private categories: string[] = [];
-  constructor(private dataSource: StaticDataSource)  { //injection of StaticDataSource class
+  private isLoading : boolean = true;
+  constructor(private dataSource: RestDataSource)  { //injection of StaticDataSource class
     //asynchronous set the instance variable of class
     dataSource.getProducts().subscribe(data => {
       this.products = data;
       //get all different categories
       this.categories = data.map(p => p.category ?? "(None)")
         .filter((c, index, array) => array.indexOf(c) == index).sort();
+      this.isLoading = false;
     });
+  }
+
+  getIsLoading(){
+    return this.isLoading;
   }
 
   //return the products list that match category pass as parameter or products that category value is undefined
@@ -30,4 +37,33 @@ export class ProductRepository {
   getCategories(): string[] {
     return this.categories;
   }
+
+  saveOrUpdateProduct(product: Product) {
+    if (product.id == null || product.id == 0) {
+      this.dataSource.saveProduct(product)
+        .subscribe(p => this.products.push(p));
+    }
+    else{
+      this.dataSource.updateProduct(product)
+        .subscribe(p => {
+          this.products.splice(
+            this.products.findIndex(pd => pd.id == product.id),
+            1,
+            product
+          );
+        });
+    }
+
+  }
+
+  deleteProduct(id: number) {
+    this.dataSource.deleteProduct(id).subscribe(p => {
+      this.products.splice(
+        this.products.findIndex(p => p.id == id),
+        1
+      );
+    });
+  }
+
+
 }

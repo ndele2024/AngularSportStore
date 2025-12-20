@@ -4,13 +4,16 @@ import {Product} from '../model/product.model';
 import {CurrencyPipe} from '@angular/common';
 import {CartModel} from '../model/cart.model';
 import {CartSummaryComponent} from '../cart-summary/cart-summary.component';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-store',
   imports: [
     CurrencyPipe,
-    CartSummaryComponent
+    CartSummaryComponent,
+    RouterLink,
+    MatProgressSpinner
   ],
   templateUrl: './store.component.html',
   standalone: true,
@@ -67,6 +70,10 @@ export class StoreComponent {
   addProductToCart(product: Product) {
     this.cart.addLine(product);
     this.router.navigateByUrl("/cart");
+  }
+
+  getIsLoading(): boolean {
+    return this.repository.getIsLoading();
   }
 
 }
