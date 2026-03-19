@@ -1,30 +1,39 @@
 import { Injectable } from "@angular/core";
-import {from, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import { Order } from "../model/order.model";
 //import { StaticDataSource } from "./static.datasource";
 import {RestDataSource} from '../model/rest.datasource';
 @Injectable()
 export class OrderRepository {
   private orders: Order[] = [];
-  private loaded: boolean = false;
+  private loadedKey?: string;
 
   constructor(private dataSource: RestDataSource) {}
 
-  loadOrders() {
-    this.loaded = true;
-    this.dataSource.getOrders()
-      .subscribe(orders => this.orders = orders);
+  loadOrders(userId?: number, forceReload: boolean = false) {
+    const key = userId ? `user-${userId}` : "admin";
+    if (!forceReload && this.loadedKey === key) {
+      return;
+    }
+
+    this.loadedKey = key;
+    const source = userId
+      ? this.dataSource.getOrdersForUser(userId)
+      : this.dataSource.getOrders();
+
+    source.subscribe(orders => this.orders = orders);
   }
 
-  getOrders(): Order[] {
-    if (!this.loaded) {
-      this.loadOrders();
+  getOrders(userId?: number): Order[] {
+    const key = userId ? `user-${userId}` : "admin";
+    if (this.loadedKey !== key) {
+      this.loadOrders(userId);
     }
     return this.orders;
   }
 
   saveOrder(order: Order): Observable<Order> {
-    this.loaded = false;
+    this.loadedKey = undefined;
     return this.dataSource.saveOrder(order);
   }
 

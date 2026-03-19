@@ -1,2 +1,29 @@
-input.ng-dirty.ng-invalid { border: 2px solid #ff0000 }
-input.ng-dirty.ng-valid { border: 2px solid #6bc502 }
+input.ng-dirty.ng-invalid { border: 2px solid #d84141; }
+input.ng-dirty.ng-valid { border: 2px solid #4cae6c; }
+
+.container-fluid .bg-dark {
+  background: linear-gradient(90deg, #08203e, #145d9c) !important;
+}
+
+.mx-auto.w-75 {
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,249,255,0.96));
+  border: 1px solid #d9e7f5;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(15, 35, 65, 0.08);
+  margin-top: 2rem;
+  padding: 1.25rem 1rem 1.5rem;
+}
+
+label {
+  color: #173250;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+}
+
+@media (max-width: 991.98px) {
+  .mx-auto.w-75 {
+    width: 100% !important;
+  }
+}

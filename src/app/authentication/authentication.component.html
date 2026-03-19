@@ -1,5 +1,5 @@
 <div class="bg-info p-2 text-center text-white">
-  <h3>SportsStore Admin</h3>
+  <h3>SportsStore</h3>
 </div>
 
 @if (errorMessage != null) {
@@ -8,21 +8,77 @@
   </div>
 }
 
-<div class="p-2 w-50 m-auto">
-  <form novalidate #form="ngForm" (ngSubmit)="authenticate(form)">
-    <div class="form-group">
-      <label>Name</label>
-      <input class="form-control" name="username"
-             [(ngModel)]="userName" required />
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input class="form-control" type="password" name="password"
-             [(ngModel)]="passwd" required />
-    </div>
-    <div class="text-center p-2">
-      <button class="btn btn-secondary m-1" routerLink="/">Go back</button>
-      <button class="btn btn-primary m-1" type="submit">Log In</button>
-    </div>
-  </form>
+@if (successMessage != null) {
+  <div class="bg-success mt-2 p-2 text-center text-white">
+    {{successMessage}}
+  </div>
+}
+
+<div class="p-3 auth-shell mx-auto">
+  <div class="d-flex justify-content-center gap-2 mb-4">
+    <button class="btn"
+            [class.btn-primary]="mode === 'login'"
+            [class.btn-outline-primary]="mode !== 'login'"
+            (click)="setMode('login')">
+      Connexion
+    </button>
+    <button class="btn"
+            [class.btn-primary]="mode === 'register'"
+            [class.btn-outline-primary]="mode !== 'register'"
+            (click)="setMode('register')">
+      Creer un compte
+    </button>
+  </div>
+
+  @if (mode === "login") {
+    <form novalidate #loginForm="ngForm" (ngSubmit)="authenticate(loginForm)">
+      <div class="form-group">
+        <label>Nom d'utilisateur</label>
+        <input class="form-control" name="username"
+               [(ngModel)]="userName" required />
+      </div>
+      <div class="form-group mt-3">
+        <label>Mot de passe</label>
+        <input class="form-control" type="password" name="password"
+               [(ngModel)]="passwd" required />
+      </div>
+      <div class="text-center p-2 mt-3">
+        <button class="btn btn-secondary m-1" routerLink="/dashboard">Retour</button>
+        <button class="btn btn-primary m-1" type="submit">Se connecter</button>
+      </div>
+    </form>
+  } @else {
+    <form novalidate #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label>Nom</label>
+          <input class="form-control" name="nom" [(ngModel)]="newUser.nom" required />
+        </div>
+        <div class="col-md-6">
+          <label>Prenom</label>
+          <input class="form-control" name="prenom" [(ngModel)]="newUser.prenom" required />
+        </div>
+        <div class="col-12">
+          <label>Adresse</label>
+          <input class="form-control" name="adresse" [(ngModel)]="newUser.adresse" required />
+        </div>
+        <div class="col-md-6">
+          <label>Telephone</label>
+          <input class="form-control" name="telephone" [(ngModel)]="newUser.telephone" required />
+        </div>
+        <div class="col-md-6">
+          <label>Nom d'utilisateur</label>
+          <input class="form-control" name="newUsername" [(ngModel)]="newUser.username" required />
+        </div>
+        <div class="col-12">
+          <label>Mot de passe</label>
+          <input class="form-control" type="password" name="newPassword" [(ngModel)]="newUser.password" required />
+        </div>
+      </div>
+      <div class="text-center p-2 mt-3">
+        <button class="btn btn-secondary m-1" routerLink="/dashboard">Retour</button>
+        <button class="btn btn-primary m-1" type="submit">Creer mon compte</button>
+      </div>
+    </form>
+  }
 </div>

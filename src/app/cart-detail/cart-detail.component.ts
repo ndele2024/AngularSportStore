@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {CartModel} from '../model/cart.model';
 import {CurrencyPipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {AuthenticationService} from '../service/authentication.service';
 
 @Component({
   selector: 'app-cart-detail',
@@ -15,6 +16,7 @@ import {RouterLink} from '@angular/router';
 })
 export class CartDetailComponent {
   cart:CartModel = inject(CartModel);
+  auth = inject(AuthenticationService);
 
 
 }

@@ -1,6 +1,6 @@
-<div class="float-end">
-  <small class="fs-6">
-    Your cart:
+<div class="cart-summary-shell">
+  <small class="fs-6 cart-summary-text">
+    Panier:
     @if(cart.itemCount > 0) {
       <span>
         {{ cart.itemCount }} item(s)
@@ -10,12 +10,12 @@
 
     @if(cart.itemCount == 0) {
       <span>
-        (empty)
+        (vide)
       </span>
     }
 
   </small>
-  <button class="btn btn-sm bg-dark text-white" [disabled]="cart.itemCount == 0" routerLink="/cart">
+  <button class="btn btn-sm cart-summary-button" [disabled]="cart.itemCount == 0" routerLink="/cart">
     <i class="fa fa-shopping-cart"></i>
   </button>
 </div>

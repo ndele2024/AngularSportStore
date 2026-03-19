@@ -40,7 +40,7 @@ import {MatPaginator} from '@angular/material/paginator';
 })
 export class ProductTableComponent {
   private repository = inject(ProductRepository);
-  colsAndRows: string[] = ['id', 'name', 'category', 'price', 'buttons'];
+  colsAndRows: string[] = ['id', 'imageUrl', 'name', 'category', 'price', 'buttons'];
   dataSource = new MatTableDataSource<Product>(this.repository.getProducts());
   differ: IterableDiffer<Product>;
 

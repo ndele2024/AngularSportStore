@@ -7,19 +7,18 @@ import {
   MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatNoDataRow,
   MatRow, MatRowDef,
-  MatTable, MatTableDataSource,
-  MatTextColumn
+  MatTable, MatTableDataSource
 } from '@angular/material/table';
 import {MatButton} from '@angular/material/button';
 import {Order} from '../model/order.model';
 import {OrderRepository} from '../service/order.repository';
+import {CurrencyPipe, DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-order-table',
   imports: [
     MatCheckbox,
     FormsModule,
-    MatTextColumn,
     MatTable,
     MatColumnDef,
     MatHeaderCell,
@@ -31,7 +30,9 @@ import {OrderRepository} from '../service/order.repository';
     MatHeaderRowDef,
     MatRowDef,
     MatButton,
-    MatNoDataRow
+    MatNoDataRow,
+    CurrencyPipe,
+    DatePipe
   ],
   templateUrl: './order-table.component.html',
   standalone: true,
@@ -39,7 +40,7 @@ import {OrderRepository} from '../service/order.repository';
 })
 export class OrderTableComponent {
   private repository = inject(OrderRepository);
-  colsAndRows: string[] = ['name', 'zip','cart_p','cart_q', 'buttons'];
+  colsAndRows: string[] = ['customer', 'contact', 'createdAt', 'cart_q', 'total', 'status', 'buttons'];
   dataSource = new MatTableDataSource<Order>(this.repository.getOrders());
   differ: IterableDiffer<Order>;
 

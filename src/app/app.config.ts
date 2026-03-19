@@ -12,6 +12,7 @@ import {RestDataSource} from './model/rest.datasource';
 import {provideHttpClient} from '@angular/common/http';
 import {AuthenticationService} from './service/authentication.service';
 import {AuthGuard} from './guard/auth.guard';
+import {UserGuard} from './guard/user.guard';
 
 export const appConfig = {
   providers: [
@@ -27,6 +28,7 @@ export const appConfig = {
     OrderRepository,
     { provide: StaticDataSource, useClass: RestDataSource },
     RestDataSource,
-    AuthenticationService
+    AuthenticationService,
+    UserGuard
   ]
 };

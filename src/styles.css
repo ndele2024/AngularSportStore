@@ -1,7 +1,68 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --bg-soft: #eef5fb;
+  --bg-card: #ffffff;
+  --brand-deep: #08203e;
+  --brand-main: #145d9c;
+  --brand-accent: #1f8fff;
+  --text-main: #11243d;
+  --text-soft: #5d6d82;
+  --border-soft: #d9e7f5;
+  --shadow-soft: 0 18px 40px rgba(16, 44, 80, 0.08);
+}
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html {
+  font-size: 17px;
+  scroll-behavior: smooth;
+}
+body {
+  background:
+    radial-gradient(circle at top left, rgba(31, 143, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, #f7fbff, #eef5fb);
+  color: var(--text-main);
+  margin: 0;
+  font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neue", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p, label, input, button, a, td, th, span, small, select {
+  font-size: 1rem;
+}
+
+.container,
+.container-fluid {
+  position: relative;
+}
+
+.btn {
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 0.65rem 1.15rem;
+}
+
+.form-control,
+.form-select,
+select.form-control {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  font-size: 1rem;
+  min-height: 3rem;
+}
+
+.card,
+.alert,
+.table {
+  border-radius: 18px;
+}
+
+.table {
+  overflow: hidden;
+}
 
 mat-toolbar span { flex: 1 1 auto; }
 .menu-button { width: 100%; font-size: 1rem; }
@@ -18,14 +79,21 @@ mat-sidenav .mat-button-wrapper {
 mat-sidenav .mat-button-wrapper mat-icon { margin-top: 5px; }
 mat-sidenav .mat-button-wrapper span { text-align: start; }
 
-table[mat-table] { width: 100%; table-layout: auto; }
+table[mat-table] {
+  background: var(--bg-card);
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  width: 100%;
+  table-layout: auto;
+}
 table[mat-table] button { margin-left: 5px;}
 table[mat-table] th.mat-header-cell { font-size: large; font-weight: bold;}
 table[mat-table] .mat-column-name { width: 25%; }
 table[mat-table] .mat-column-buttons { width: 30%; }
 /* table[mat-table] + button[mat-flat-button] { margin-top: 10px;} */
 
-.bottom-box { background-color: white; padding-bottom: 20px;}
+.bottom-box { background-color: transparent; padding-bottom: 20px;}
 .bottom-box > button[mat-flat-button] { margin-top: 10px;}
 .bottom-box mat-paginator { float: right; font-size: 14px; }
 
@@ -40,4 +108,41 @@ table.orders tbody, table.orders thead { vertical-align: top }
 table.orders td { padding-top: 10px;}
 table.orders table th:first-of-type, table.orders table td:first-of-type {
   margin: 0; padding: 0;
+}
+
+.app-section-card,
+.auth-shell,
+.dashboard-card,
+.hero,
+.product-card {
+  box-shadow: var(--shadow-soft);
+}
+
+@media (max-width: 767.98px) {
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    background-size: cover;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    width: auto;
+  }
+
+  .container,
+  .container-fluid {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+
+  mat-sidenav-container {
+    height: auto;
+    min-height: calc(100vh - 60px);
+  }
 }

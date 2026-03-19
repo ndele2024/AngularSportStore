@@ -7,13 +7,12 @@ export class ProductRepository {
   private products: Product[] = [];
   private categories: string[] = [];
   private isLoading : boolean = true;
+
   constructor(private dataSource: RestDataSource)  { //injection of StaticDataSource class
     //asynchronous set the instance variable of class
     dataSource.getProducts().subscribe(data => {
       this.products = data;
-      //get all different categories
-      this.categories = data.map(p => p.category ?? "(None)")
-        .filter((c, index, array) => array.indexOf(c) == index).sort();
+      this.updateCategories();
       this.isLoading = false;
     });
   }
@@ -23,9 +22,22 @@ export class ProductRepository {
   }
 
   //return the products list that match category pass as parameter or products that category value is undefined
-  getProducts(category?: string): Product[] {
+  getProducts(category?: string, searchTerm?: string): Product[] {
+    const normalizedSearch = (searchTerm ?? "").trim().toLowerCase();
     return this.products
-      .filter(p => category == undefined || category == p.category);
+      .filter(p => category == undefined || category == p.category)
+      .filter(p => {
+        if (!normalizedSearch) {
+          return true;
+        }
+
+        return [
+          p.name,
+          p.category,
+          p.description,
+          p.price?.toString()
+        ].some(value => value?.toLowerCase().includes(normalizedSearch));
+      });
   }
 
   //return a product corresponding of the id pass as parameter or return undefined if no product match
@@ -41,7 +53,10 @@ export class ProductRepository {
   saveOrUpdateProduct(product: Product) {
     if (product.id == null || product.id == 0) {
       this.dataSource.saveProduct(product)
-        .subscribe(p => this.products.push(p));
+        .subscribe(p => {
+          this.products.push(p);
+          this.updateCategories();
+        });
     }
     else{
       this.dataSource.updateProduct(product)
@@ -51,6 +66,7 @@ export class ProductRepository {
             1,
             product
           );
+          this.updateCategories();
         });
     }
 
@@ -62,8 +78,14 @@ export class ProductRepository {
         this.products.findIndex(p => p.id == id),
         1
       );
+      this.updateCategories();
     });
   }
 
+  private updateCategories() {
+    this.categories = this.products.map(p => p.category ?? "(None)")
+      .filter((c, index, array) => array.indexOf(c) == index)
+      .sort();
+  }
 
 }

@@ -1,0 +1,95 @@
+<div class="container py-4">
+  @if (!isAuthenticated) {
+    <div class="hero shadow-sm">
+      <div class="hero-content">
+        <p class="eyebrow">SPORTS STORE</p>
+        <h1>Votre espace client commence ici</h1>
+        <p class="lead">
+          Connectez-vous pour suivre vos commandes, retrouver vos derniers achats
+          et reprendre votre panier exactement ou vous l'avez laisse.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" routerLink="/auth">Se connecter</a>
+          <a class="btn btn-outline-primary" routerLink="/store">Voir la boutique</a>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="dashboard-header mb-4">
+      <div>
+        <p class="eyebrow">Bienvenue</p>
+        <h1>{{ currentUser?.prenom }} {{ currentUser?.nom }}</h1>
+        <p class="lead mb-0">
+          Retrouvez vos achats recents, vos commandes en cours et votre panier.
+        </p>
+      </div>
+      <a class="btn btn-primary" routerLink="/store">Continuer les achats</a>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="dashboard-card h-100">
+          <h3>Panier</h3>
+          <p class="card-subtitle">{{ cart.itemCount }} article(s) pour {{ cart.cartPrice | currency:"USD":"symbol":"1.2-2" }}</p>
+          @if (cart.lines.length === 0) {
+            <p class="empty-state">Votre panier est vide pour le moment.</p>
+          } @else {
+            <div class="list-group">
+              @for (line of cart.lines; track line.product.id) {
+                <div class="list-item">
+                  <span>{{ line.product.name }}</span>
+                  <span>x{{ line.quantity }}</span>
+                </div>
+              }
+            </div>
+          }
+          <a class="btn btn-outline-primary mt-3" routerLink="/cart">Ouvrir le panier</a>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="dashboard-card h-100">
+          <h3>Commandes en cours</h3>
+          @if (activeOrders.length === 0) {
+            <p class="empty-state">Aucune commande en cours.</p>
+          } @else {
+            @for (order of activeOrders; track order.id) {
+              <div class="order-item">
+                <div>
+                  <strong>Commande #{{ order.id }}</strong>
+                  <div>{{ order.itemCount }} article(s)</div>
+                </div>
+                <div class="text-end">
+                  <div>{{ order.total | currency:"USD":"symbol":"1.2-2" }}</div>
+                  <small>{{ order.createdAt | date:"mediumDate" }}</small>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="dashboard-card h-100">
+          <h3>Derniers achats</h3>
+          @if (recentPurchases.length === 0) {
+            <p class="empty-state">Aucun achat termine pour le moment.</p>
+          } @else {
+            @for (order of recentPurchases; track order.id) {
+              <div class="order-item">
+                <div>
+                  <strong>Commande #{{ order.id }}</strong>
+                  <div>{{ order.itemCount }} article(s)</div>
+                </div>
+                <div class="text-end">
+                  <div>{{ order.total | currency:"USD":"symbol":"1.2-2" }}</div>
+                  <small>{{ order.createdAt | date:"mediumDate" }}</small>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

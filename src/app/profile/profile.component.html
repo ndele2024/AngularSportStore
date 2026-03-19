@@ -1,0 +1,56 @@
+<div class="container py-4">
+  <div class="profile-shell mx-auto">
+    <div class="profile-header">
+      <div>
+        <p class="profile-eyebrow">Mon compte</p>
+        <h1>{{ currentUser?.prenom }} {{ currentUser?.nom }}</h1>
+        <p class="profile-lead">
+          Consultez et modifiez vos informations personnelles.
+        </p>
+      </div>
+      <a class="btn btn-outline-primary" routerLink="/dashboard">Retour au tableau de bord</a>
+    </div>
+
+    @if (successMessage) {
+      <div class="alert alert-success">{{ successMessage }}</div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert alert-danger">{{ errorMessage }}</div>
+    }
+
+    <form #form="ngForm" (ngSubmit)="saveProfile(form)" novalidate>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label>Nom</label>
+          <input class="form-control" name="nom" [(ngModel)]="profile.nom" required />
+        </div>
+        <div class="col-md-6">
+          <label>Prenom</label>
+          <input class="form-control" name="prenom" [(ngModel)]="profile.prenom" required />
+        </div>
+        <div class="col-12">
+          <label>Adresse</label>
+          <input class="form-control" name="adresse" [(ngModel)]="profile.adresse" required />
+        </div>
+        <div class="col-md-6">
+          <label>Telephone</label>
+          <input class="form-control" name="telephone" [(ngModel)]="profile.telephone" required />
+        </div>
+        <div class="col-md-6">
+          <label>Nom d'utilisateur</label>
+          <input class="form-control" name="username" [(ngModel)]="profile.username" required />
+        </div>
+        <div class="col-12">
+          <label>Nouveau mot de passe</label>
+          <input class="form-control" type="password" name="password" [(ngModel)]="newPassword" placeholder="Laisser vide pour conserver l'actuel" />
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <a class="btn btn-outline-secondary" routerLink="/store">Retour a la boutique</a>
+        <button class="btn btn-primary" type="submit">Enregistrer les modifications</button>
+      </div>
+    </form>
+  </div>
+</div>

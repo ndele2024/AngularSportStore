@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import { Observable, map } from "rxjs";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import { Observable } from "rxjs";
 import { Product } from "./product.model";
 import { Order } from "./order.model";
+import {AuthResponse, User} from "./user.model";
+import {StoredCart} from "./cart.model";
 
 const PROTOCOL = "http";
 const PORT = 3500;
@@ -21,20 +23,20 @@ export class RestDataSource {
   }
 
   saveOrder(order: Order): Observable<Order> {
-    return this.http.post<Order>(this.baseUrl + "orders", order);
+    return this.http.post<Order>(this.baseUrl + "orders", order, this.getOptions());
   }
 
-  authenticate(user: string, pass: string): Observable<boolean> {
-    return this.http.post<any>(
+  authenticate(user: string, pass: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(
       this.baseUrl + "login",
       {
-        name: user,
+        username: user,
         password: pass
-      }).pipe(map(response => {
-        this.auth_token = response.success ? response.token : null;
-        console.log(response);
-        return response.success;
-    }));
+      });
+  }
+
+  register(user: User): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(this.baseUrl + "register", user);
   }
 
   private getOptions() {
@@ -73,6 +75,17 @@ export class RestDataSource {
       this.getOptions()
     );
   }
+
+  getOrdersForUser(userId: number): Observable<Order[]> {
+    return this.http.get<Order[]>(
+      `${this.baseUrl}orders`,
+      {
+        ...this.getOptions(),
+        params: new HttpParams().set("userId", userId)
+      }
+    );
+  }
+
   deleteOrder(id: number): Observable<Order> {
     return this.http.delete<Order>(
       `${this.baseUrl}orders/${id}`,
@@ -83,6 +96,29 @@ export class RestDataSource {
     return this.http.put<Order>(
       `${this.baseUrl}orders/${order.id}`,
       order,
+      this.getOptions()
+    );
+  }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(
+      `${this.baseUrl}users`,
+      this.getOptions()
+    );
+  }
+
+  updateUserCart(userId: number, cart: StoredCart): Observable<User> {
+    return this.http.patch<User>(
+      `${this.baseUrl}users/${userId}`,
+      { cart },
+      this.getOptions()
+    );
+  }
+
+  updateUserProfile(userId: number, user: Partial<User>): Observable<User> {
+    return this.http.patch<User>(
+      `${this.baseUrl}users/${userId}`,
+      user,
       this.getOptions()
     );
   }

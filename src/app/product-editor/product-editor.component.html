@@ -20,6 +20,10 @@
     <mat-label>Price</mat-label>
     <input matInput name="price" [(ngModel)]="product.price" />
   </mat-form-field>
+  <mat-form-field>
+    <mat-label>Image URL</mat-label>
+    <input matInput name="imageUrl" [(ngModel)]="product.imageUrl" />
+  </mat-form-field>
   <button type="submit" mat-flat-button color="primary">
     {{editing ? "Save" : "Create"}}
   </button>

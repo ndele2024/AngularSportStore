@@ -2,19 +2,23 @@ import { Routes } from '@angular/router';
 import {StoreComponent} from './store/store.component';
 import {CartDetailComponent} from './cart-detail/cart-detail.component';
 import {CheckoutComponent} from './checkout/checkout.component';
-import {StoreFirstGuard} from './guard/store-firt.guard';
 import {AdminComponent} from './admin/admin.component';
 import {AuthenticationComponent} from './authentication/authentication.component';
 import {AuthGuard} from './guard/auth.guard';
 import {ProductEditorComponent} from './product-editor/product-editor.component';
 import {ProductTableComponent} from './product-table/product-table.component';
 import {OrderTableComponent} from './order-table/order-table.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {UserGuard} from './guard/user.guard';
+import {ProfileComponent} from './profile/profile.component';
 
 export const routes: Routes = [
-  { path: "", redirectTo: 'StoreComponent', pathMatch: "full" },
-  { path: "store", component: StoreComponent, canActivate:[StoreFirstGuard]},
-  { path: "cart", component: CartDetailComponent, canActivate:[StoreFirstGuard] },
-  { path: "checkout", component: CheckoutComponent, canActivate:[StoreFirstGuard] },
+  { path: "", redirectTo: "dashboard", pathMatch: "full" },
+  { path: "dashboard", component: DashboardComponent },
+  { path: "profile", component: ProfileComponent, canActivate:[UserGuard] },
+  { path: "store", component: StoreComponent },
+  { path: "cart", component: CartDetailComponent },
+  { path: "checkout", component: CheckoutComponent, canActivate:[UserGuard] },
   {path: "admin", component: AdminComponent, canActivate:[AuthGuard],
     children : [
       { path: "products/:mode/:id", component: ProductEditorComponent },
@@ -25,6 +29,6 @@ export const routes: Routes = [
     ]
   },
 
-  {path: "auth", component: AuthenticationComponent, canActivate:[StoreFirstGuard]},
-  { path: "**", redirectTo: "/store" }
+  {path: "auth", component: AuthenticationComponent},
+  { path: "**", redirectTo: "/dashboard" }
 ];

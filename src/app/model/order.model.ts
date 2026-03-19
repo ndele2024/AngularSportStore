@@ -3,18 +3,25 @@ import { CartModel } from "./cart.model";
 @Injectable()
 export class Order {
   public id?: number;
-  public name?: string;
-  public address?: string;
-  public city?: string;
-  public state?: string;
-  public zip?: string;
-  public country?: string;
+  public userId?: number;
+  public username?: string;
+  public nom?: string;
+  public prenom?: string;
+  public adresse?: string;
+  public telephone?: string;
+  public createdAt?: string;
+  public total?: number;
+  public itemCount?: number;
   public shipped: boolean = false;
   constructor(public cart: CartModel) { }
   clear() {
     this.id = undefined;
-    this.name = this.address = this.city = undefined;
-    this.state = this.zip = this.country = undefined;
+    this.userId = undefined;
+    this.username = undefined;
+    this.nom = this.prenom = undefined;
+    this.adresse = this.telephone = undefined;
+    this.createdAt = undefined;
+    this.total = this.itemCount = undefined;
     this.shipped = false;
     this.cart.clear();
   }

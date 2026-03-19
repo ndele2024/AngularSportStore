@@ -1,0 +1,29 @@
+.container-fluid .bg-dark {
+  background: linear-gradient(90deg, #08203e, #145d9c) !important;
+}
+
+.table {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 40px rgba(15, 35, 65, 0.08);
+}
+
+.table th,
+.table td {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.form-control-sm {
+  border: 1px solid #d9e7f5;
+  border-radius: 12px;
+  min-height: 2.4rem;
+  padding: 0.35rem 0.55rem;
+}
+
+@media (max-width: 767.98px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

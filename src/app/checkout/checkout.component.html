@@ -10,76 +10,60 @@
     <h2>Thanks!</h2>
     <p>Thanks for placing your order.</p>
     <p>We'll ship your goods as soon as possible.</p>
-    <button class="btn btn-primary" routerLink="/store">Return to Store</button>
+    <button class="btn btn-primary" routerLink="/dashboard">Retour au tableau de bord</button>
   </div>
 } @else {
   <div class="mx-auto w-75">
   <form #form="ngForm" novalidate (ngSubmit)="submitOrder(form)" class="m-2">
 
     <div class="form-group p-1">
-      <label>Name</label>
-      <input class="form-control" #name="ngModel" name="name" [(ngModel)]="order.name" required />
-      @if(submitted && name.invalid) {
+      <label>Nom</label>
+      <input class="form-control" #nom="ngModel" name="nom" [(ngModel)]="order.nom" required />
+      @if(submitted && nom.invalid) {
         <span class="text-danger">
-          Please enter your name
+          Veuillez saisir votre nom
         </span>
       }
 
     </div>
 
     <div class="form-group p-1">
-      <label>Address</label>
-      <input class="form-control" #address="ngModel" name="address" [(ngModel)]="order.address" required />
-      @if(submitted && address.invalid) {
+      <label>Prenom</label>
+      <input class="form-control" #prenom="ngModel" name="prenom" [(ngModel)]="order.prenom" required />
+      @if(submitted && prenom.invalid) {
         <span class="text-danger">
-          Please enter your address
+          Veuillez saisir votre prenom
         </span>
       }
     </div>
 
     <div class="form-group p-1">
-      <label>City</label>
-      <input class="form-control" #city="ngModel" name="city" [(ngModel)]="order.city" required />
-      @if(submitted && city.invalid) {
+      <label>Adresse</label>
+      <input class="form-control" #adresse="ngModel" name="adresse" [(ngModel)]="order.adresse" required />
+      @if(submitted && adresse.invalid) {
         <span class="text-danger">
-          Please enter your city
+          Veuillez saisir votre adresse
         </span>
       }
     </div>
 
     <div class="form-group p-1">
-      <label>State</label>
-      <input class="form-control" #state="ngModel" name="state" [(ngModel)]="order.state" required />
-      @if(submitted && state.invalid) {
+      <label>Telephone</label>
+      <input class="form-control" #telephone="ngModel" name="telephone" [(ngModel)]="order.telephone" required />
+      @if(submitted && telephone.invalid) {
         <span class="text-danger">
-          Please enter your state
+          Veuillez saisir votre telephone
         </span>
       }
     </div>
 
-    <div class="form-group p-1">
-      <label>Zip/Postal Code</label>
-      <input class="form-control" #zip="ngModel" name="zip" [(ngModel)]="order.zip" required />
-      @if(submitted && zip.invalid) {
-        <span class="text-danger">
-          Please enter your zip/postal code
-        </span>
-      }
-    </div>
-
-    <div class="form-group p-1">
-      <label>Country</label>
-      <input class="form-control" #country="ngModel" name="country" [(ngModel)]="order.country" required />
-      @if(submitted && country.invalid) {
-        <span class="text-danger">
-          Please enter your country
-        </span>
-      }
+    <div class="alert alert-light border mt-3">
+      Total a payer: <strong>{{ order.cart.cartPrice | currency:"USD":"symbol":"1.2-2" }}</strong>
     </div>
 
     <div class="text-center">
       <button class="btn btn-secondary m-2" routerLink="/cart">Back</button>
-      <button class="btn btn-primary m-2" type="submit">Complete Order</button>
+      <button class="btn btn-primary m-2" type="submit">Payer et confirmer</button>
     </div>
 
   </form>

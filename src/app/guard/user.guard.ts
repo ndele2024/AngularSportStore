@@ -1,14 +1,14 @@
-import {ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {inject, Injectable} from '@angular/core';
 import {AuthenticationService} from '../service/authentication.service';
 
 @Injectable()
-export class AuthGuard {
+export class UserGuard {
   private router = inject(Router);
   private auth = inject(AuthenticationService);
 
-  canActivate = (route: ActivatedRouteSnapshot, state:RouterStateSnapshot) => {
-    if (!this.auth.authenticated || !this.auth.isAdmin) {
+  canActivate = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    if (!this.auth.authenticated) {
       this.router.navigate(['/auth'], {
         queryParams: { returnUrl: state.url }
       });
@@ -17,4 +17,3 @@ export class AuthGuard {
     return true;
   };
 }
-
