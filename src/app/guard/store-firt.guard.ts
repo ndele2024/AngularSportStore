@@ -1,6 +1,6 @@
 import {ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot} from '@angular/router';
 import {Injectable} from '@angular/core';
-import {StoreComponent} from './store/store.component';
+import {StoreComponent} from '../store/store.component';
 
 @Injectable()
 export class StoreFirstGuard {

@@ -2,16 +2,16 @@ import {provideZoneChangeDetection} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import {ProductRepository} from './model/product.repository';
+import {ProductRepository} from './service/product.repository';
 import {StaticDataSource} from './model/static.datasource';
 import {CartModel} from './model/cart.model';
-import {StoreFirstGuard} from './store-firt.guard';
+import {StoreFirstGuard} from './guard/store-firt.guard';
 import {Order} from './model/order.model';
-import {OrderRepository} from './model/order.repository';
+import {OrderRepository} from './service/order.repository';
 import {RestDataSource} from './model/rest.datasource';
 import {provideHttpClient} from '@angular/common/http';
-import {AuthenticationService} from './model/authentication.service';
-import {AuthGuard} from './admin/auth.guard';
+import {AuthenticationService} from './service/authentication.service';
+import {AuthGuard} from './guard/auth.guard';
 
 export const appConfig = {
   providers: [

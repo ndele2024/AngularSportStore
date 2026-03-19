@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {ProductRepository} from '../model/product.repository';
+import {ProductRepository} from '../service/product.repository';
 import {Product} from '../model/product.model';
 import {CurrencyPipe} from '@angular/common';
 import {CartModel} from '../model/cart.model';

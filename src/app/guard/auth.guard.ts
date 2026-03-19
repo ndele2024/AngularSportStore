@@ -1,6 +1,6 @@
 import {ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn, Router} from '@angular/router';
 import {inject, Injectable} from '@angular/core';
-import {AuthenticationService} from '../model/authentication.service';
+import {AuthenticationService} from '../service/authentication.service';
 
 @Injectable()
 export class AuthGuard {

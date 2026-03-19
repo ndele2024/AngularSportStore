@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {RestDataSource} from './rest.datasource';
+import {RestDataSource} from '../model/rest.datasource';
 import {Observable} from 'rxjs';
 
 @Injectable({

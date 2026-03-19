@@ -1,3 +1,46 @@
-<div class="bg-info p-2 text-white">
-  <h3>Placeholder for Admin Features</h3>
-</div>
+<mat-toolbar color="primary">
+  @if (sidenav.mode === "over") {
+    <button mat-icon-button (click)="sidenav.toggle()">
+
+      @if(!sidenav.opened) {
+        <mat-icon>menu</mat-icon>
+      }
+      @else{
+        <mat-icon>close</mat-icon>
+      }
+
+    </button>
+  }
+
+  <span></span>
+  SportsStore Administration
+  <span></span>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+    <button mat-button class="menu-button"
+            routerLink="/admin/products"
+            routerLinkActive="mat-accent"
+            (click)="sidenav.close()">
+      <mat-icon>shopping_cart</mat-icon>
+      <span>Products</span>
+    </button>
+    <button mat-button class="menu-button"
+            routerLink="/admin/orders"
+            routerLinkActive="mat-accent"
+            (click)="sidenav.close()">
+      <mat-icon>local_shipping</mat-icon>
+      <span>Orders</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-button class="menu-button logout" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

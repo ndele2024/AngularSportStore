@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {OrderRepository} from '../model/order.repository';
+import {OrderRepository} from '../service/order.repository';
 import {Order} from '../model/order.model';
 import {FormsModule, NgForm} from "@angular/forms";
 import {RouterLink} from '@angular/router';
