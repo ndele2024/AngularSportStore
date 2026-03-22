@@ -40,3 +40,17 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Spring Boot / Java
+**/target/
+**/.mvn/
+*.class
+
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+*.user
+*.rsuser
+*.suo
+TestResults/

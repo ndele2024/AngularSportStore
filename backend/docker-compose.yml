@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: sport-store-postgres
+    environment:
+      POSTGRES_DB: sportstore
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ndele
+    ports:
+      - "5432:5432"
+    volumes:
+      - sportstore_pgdata:/var/lib/postgresql/data
+
+volumes:
+  sportstore_pgdata:

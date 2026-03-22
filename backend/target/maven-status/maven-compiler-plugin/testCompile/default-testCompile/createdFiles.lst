@@ -1,0 +1,3 @@
+com\sportstore\backend\integration\UserControllerIntegrationTest.class
+com\sportstore\backend\integration\AuthAndProductIntegrationTest.class
+com\sportstore\backend\service\AuthServiceTest.class
