@@ -8,6 +8,8 @@ Application e-commerce composee de :
 
 L'application n'utilise plus `json-server`, `data.js` ni `authMiddleware.js`.
 
+Le checkout inclut maintenant un paiement carte simule, une facture PDF telechargeable et la preparation automatique d'emails HTML de confirmation/livraison cote backend.
+
 ## Architecture officielle
 
 Le frontend Angular est maintenant branche definitivement sur le backend **Spring Boot + PostgreSQL** expose sur :

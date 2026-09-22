@@ -1,0 +1,45 @@
+.orders {
+  width: 100%;
+}
+
+.line-product {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.line-product img {
+  border-radius: 10px;
+  height: 44px;
+  object-fit: cover;
+  width: 44px;
+}
+
+.status-chip {
+  background: #fff3d2;
+  border-radius: 999px;
+  color: #8a5a00;
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.35rem 0.8rem;
+}
+
+.status-chip.delivered {
+  background: #dcf7e8;
+  color: #14663b;
+}
+
+.status-chip.payment {
+  background: #e1efff;
+  color: #0b4f97;
+}
+
+.payment-status {
+  margin-bottom: 0.35rem;
+}
+
+.no-data {
+  padding: 1.5rem;
+  text-align: center;
+}

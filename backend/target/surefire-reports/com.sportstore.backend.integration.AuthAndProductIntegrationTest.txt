@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.sportstore.backend.integration.AuthAndProductIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 37.24 s -- in com.sportstore.backend.integration.AuthAndProductIntegrationTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 76.42 s -- in com.sportstore.backend.integration.AuthAndProductIntegrationTest

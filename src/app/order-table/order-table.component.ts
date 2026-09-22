@@ -40,7 +40,7 @@ import {CurrencyPipe, DatePipe} from '@angular/common';
 })
 export class OrderTableComponent {
   private repository = inject(OrderRepository);
-  colsAndRows: string[] = ['customer', 'contact', 'createdAt', 'cart_q', 'total', 'status', 'buttons'];
+  colsAndRows: string[] = ['customer', 'contact', 'createdAt', 'cart_q', 'payment', 'total', 'status', 'buttons'];
   dataSource = new MatTableDataSource<Order>(this.repository.getOrders());
   differ: IterableDiffer<Order>;
 
@@ -48,7 +48,7 @@ export class OrderTableComponent {
     this.differ = differs.find(this.repository.getOrders()).create();
     this.dataSource.filter = "true";
     this.dataSource.filterPredicate = (order, include) => {
-      return !order.shipped || include.toString() == "true"
+      return order.status !== "LIVRE" || include.toString() == "true"
     };
   }
 
@@ -60,8 +60,9 @@ export class OrderTableComponent {
     this.dataSource.filter = include.toString()
   }
 
-  toggleShipped(order: Order) {
-    order.shipped = !order.shipped;
+  markAsDelivered(order: Order) {
+    order.shipped = true;
+    order.status = "LIVRE";
     this.repository.updateOrder(order);
   }
 

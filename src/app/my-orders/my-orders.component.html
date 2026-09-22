@@ -1,0 +1,85 @@
+<div class="container py-4">
+  <div class="orders-hero">
+    <div>
+      <p class="eyebrow">Suivi client</p>
+      <h1>Mes commandes</h1>
+      <p class="lead mb-0">
+        Consultez vos commandes, leur statut de livraison et telechargez votre facture PDF quand vous le souhaitez.
+      </p>
+    </div>
+    <div class="orders-hero-actions">
+      <a class="btn btn-outline-primary" routerLink="/dashboard">Tableau de bord</a>
+      <a class="btn btn-primary" routerLink="/store">Retour a la boutique</a>
+    </div>
+  </div>
+
+  @if (orders.length === 0) {
+    <div class="orders-empty">
+      <h2>Aucune commande pour le moment</h2>
+      <p>Vous pourrez retrouver ici toutes vos commandes des qu'un paiement sera confirme.</p>
+      <a class="btn btn-primary" routerLink="/store">Commencer mes achats</a>
+    </div>
+  } @else {
+    <div class="orders-grid">
+      @for (order of orders; track order.id) {
+        <section class="order-card">
+          <div class="order-card-header">
+            <div>
+              <p class="order-ref">Commande #{{ order.id }}</p>
+              <h2>{{ order.itemCount }} article(s)</h2>
+              <p class="order-meta">
+                Passee le {{ order.createdAt | date:"mediumDate" }}
+                @if(order.deliveredAt) {
+                  <span> • Livree le {{ order.deliveredAt | date:"mediumDate" }}</span>
+                }
+              </p>
+            </div>
+            <div class="status-group">
+              <span class="status-chip" [class.delivered]="order.status === 'LIVRE'">
+                {{ order.status === "LIVRE" ? "Livre" : "En traitement" }}
+              </span>
+              <span class="status-chip payment">
+                {{ order.paymentStatus === "PAYE" ? "Paye" : "En attente" }}
+              </span>
+            </div>
+          </div>
+
+          <div class="order-summary">
+            <div>
+              <span>Facture</span>
+              <strong>{{ order.invoiceNumber || "-" }}</strong>
+            </div>
+            <div>
+              <span>Paiement</span>
+              <strong>{{ order.paymentReference || "-" }}</strong>
+            </div>
+            <div>
+              <span>Total</span>
+              <strong>{{ order.total | currency:"USD":"symbol":"1.2-2" }}</strong>
+            </div>
+          </div>
+
+          <div class="order-lines">
+            @for (line of order.cart.lines; track line.product.id) {
+              <div class="order-line">
+                <img [src]="line.product.imageUrl || 'https://via.placeholder.com/120x120?text=Sport+Store'"
+                     [alt]="line.product.name" />
+                <div>
+                  <strong>{{ line.product.name }}</strong>
+                  <div>{{ line.quantity }} x {{ line.product.price | currency:"USD":"symbol":"1.2-2" }}</div>
+                </div>
+                <span>{{ (line.product.price ?? 0) * line.quantity | currency:"USD":"symbol":"1.2-2" }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="order-actions">
+            <button class="btn btn-primary" type="button" (click)="downloadInvoice(order)">
+              Telecharger la facture
+            </button>
+          </div>
+        </section>
+      }
+    </div>
+  }
+</div>

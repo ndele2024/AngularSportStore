@@ -54,6 +54,13 @@ public class StoreMapper {
     dto.setCreatedAt(order.getCreatedAt());
     dto.setTotal(order.getTotal());
     dto.setItemCount(order.getItemCount());
+    dto.setStatus(order.getStatus());
+    dto.setPaymentStatus(order.getPaymentStatus());
+    dto.setPaymentMethod(order.getPaymentMethod());
+    dto.setPaymentReference(order.getPaymentReference());
+    dto.setPaymentLast4(order.getPaymentLast4());
+    dto.setInvoiceNumber(order.getInvoiceNumber());
+    dto.setDeliveredAt(order.getDeliveredAt());
     dto.setShipped(order.isShipped());
     dto.setCart(toStoredCartFromOrderLines(order.getLines()));
     return dto;

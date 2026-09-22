@@ -38,5 +38,13 @@ Routes compatibles avec le frontend actuel:
 - `POST /orders`
 - `PUT /orders/{id}`
 - `DELETE /orders/{id}`
+- `GET /orders/{id}/invoice`
 - `GET /users`
 - `PATCH /users/{id}`
+
+## Paiement et livraison
+
+- paiement par carte simule au moment du checkout
+- statut de commande `EN_TRAITEMENT` puis `LIVRE`
+- facture PDF telechargeable pour chaque commande
+- emails HTML de confirmation et de livraison prepares automatiquement dans `backend-dotnet/build/emails`

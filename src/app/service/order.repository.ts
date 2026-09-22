@@ -37,6 +37,10 @@ export class OrderRepository {
     return this.dataSource.saveOrder(order);
   }
 
+  downloadInvoice(orderId: number): Observable<Blob> {
+    return this.dataSource.downloadInvoice(orderId);
+  }
+
   updateOrder(order: Order) {
     this.dataSource.updateOrder(order).subscribe(order => {
       this.orders.splice(this.orders.

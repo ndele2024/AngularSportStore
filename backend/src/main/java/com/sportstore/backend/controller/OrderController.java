@@ -4,7 +4,10 @@ import com.sportstore.backend.dto.OrderDto;
 import com.sportstore.backend.security.AuthenticatedUser;
 import com.sportstore.backend.service.OrderService;
 import java.util.List;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,16 @@ public class OrderController {
   @GetMapping("/orders")
   public List<OrderDto> getOrders(@AuthenticationPrincipal AuthenticatedUser currentUser) {
     return orderService.getOrders(currentUser);
+  }
+
+  @GetMapping("/orders/{id}/invoice")
+  public ResponseEntity<byte[]> downloadInvoice(@PathVariable Long id,
+                                                @AuthenticationPrincipal AuthenticatedUser currentUser) {
+    byte[] pdf = orderService.generateInvoice(id, currentUser);
+    return ResponseEntity.ok()
+      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facture-" + id + ".pdf")
+      .contentType(MediaType.APPLICATION_PDF)
+      .body(pdf);
   }
 
   @PostMapping("/orders")

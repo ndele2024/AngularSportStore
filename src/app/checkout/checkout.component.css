@@ -1,17 +1,73 @@
 input.ng-dirty.ng-invalid { border: 2px solid #d84141; }
 input.ng-dirty.ng-valid { border: 2px solid #4cae6c; }
 
-.container-fluid .bg-dark {
-  background: linear-gradient(90deg, #08203e, #145d9c) !important;
+.checkout-shell {
+  padding: 1.5rem 0 3rem;
 }
 
-.mx-auto.w-75 {
-  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,249,255,0.96));
+.checkout-banner {
+  background: linear-gradient(135deg, #08203e, #1f7bc1);
+  border-radius: 28px;
+  color: #fff;
+  margin: 0 auto 1.5rem;
+  max-width: 1200px;
+  padding: 2rem;
+  box-shadow: 0 24px 48px rgba(10, 39, 72, 0.18);
+}
+
+.eyebrow {
+  color: #8fd3ff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.checkout-layout {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.checkout-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,249,255,0.96));
   border: 1px solid #d9e7f5;
   border-radius: 24px;
   box-shadow: 0 18px 40px rgba(15, 35, 65, 0.08);
-  margin-top: 2rem;
-  padding: 1.25rem 1rem 1.5rem;
+  padding: 1.5rem;
+}
+
+.stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.step {
+  background: #edf5ff;
+  border-radius: 999px;
+  color: #5f738d;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+}
+
+.step.active {
+  background: #0f5fa6;
+  color: #fff;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.35rem 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-group-full {
+  grid-column: 1 / -1;
 }
 
 label {
@@ -22,8 +78,145 @@ label {
   margin-bottom: 0.45rem;
 }
 
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.summary-card h3,
+.form-card h2,
+.success-card h2 {
+  color: #173250;
+  margin-bottom: 1rem;
+}
+
+.summary-lines {
+  display: grid;
+  gap: 1rem;
+}
+
+.summary-line {
+  align-items: center;
+  border-bottom: 1px solid #e2ebf5;
+  display: flex;
+  font-size: 1.02rem;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+}
+
+.summary-total {
+  align-items: center;
+  display: flex;
+  font-size: 1.15rem;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.payment-hint {
+  color: #66768c;
+  line-height: 1.7;
+}
+
+.payment-preview {
+  background: linear-gradient(135deg, #10233c, #247bc2);
+  border-radius: 24px;
+  color: #fff;
+  margin: 1.25rem 0;
+  min-height: 210px;
+  padding: 1.5rem;
+}
+
+.card-chip {
+  background: linear-gradient(135deg, #f8d775, #d39d38);
+  border-radius: 10px;
+  height: 42px;
+  margin-bottom: 2rem;
+  width: 62px;
+}
+
+.card-number {
+  font-size: 1.5rem;
+  letter-spacing: 0.18em;
+  margin-bottom: 1.5rem;
+}
+
+.card-meta {
+  display: flex;
+  font-size: 1rem;
+  justify-content: space-between;
+}
+
+.success-card {
+  margin: 0 auto;
+  max-width: 760px;
+  text-align: center;
+}
+
+.success-icon {
+  align-items: center;
+  background: linear-gradient(135deg, #1c9b5f, #52c97e);
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  font-size: 2rem;
+  height: 78px;
+  justify-content: center;
+  margin-bottom: 1rem;
+  width: 78px;
+}
+
+.success-summary {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.success-summary div {
+  background: #eff7ff;
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.success-summary span {
+  color: #6b7b90;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
 @media (max-width: 991.98px) {
-  .mx-auto.w-75 {
-    width: 100% !important;
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .checkout-banner,
+  .checkout-card {
+    border-radius: 20px;
+    padding: 1.25rem;
+  }
+
+  .form-grid,
+  .success-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .card-number {
+    font-size: 1.18rem;
+    letter-spacing: 0.12em;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions .btn {
+    width: 100%;
   }
 }

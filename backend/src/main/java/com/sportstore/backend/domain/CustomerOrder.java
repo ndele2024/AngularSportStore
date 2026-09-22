@@ -49,6 +49,26 @@ public class CustomerOrder {
   private Integer itemCount;
 
   @Column(nullable = false)
+  private String status;
+
+  @Column(nullable = false)
+  private String paymentStatus;
+
+  @Column(nullable = false)
+  private String paymentMethod;
+
+  @Column(nullable = false, unique = true)
+  private String paymentReference;
+
+  @Column(nullable = false)
+  private String paymentLast4;
+
+  @Column(nullable = false, unique = true)
+  private String invoiceNumber;
+
+  private Instant deliveredAt;
+
+  @Column(nullable = false)
   private boolean shipped;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -144,6 +164,62 @@ public class CustomerOrder {
 
   public void setItemCount(Integer itemCount) {
     this.itemCount = itemCount;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getPaymentStatus() {
+    return paymentStatus;
+  }
+
+  public void setPaymentStatus(String paymentStatus) {
+    this.paymentStatus = paymentStatus;
+  }
+
+  public String getPaymentMethod() {
+    return paymentMethod;
+  }
+
+  public void setPaymentMethod(String paymentMethod) {
+    this.paymentMethod = paymentMethod;
+  }
+
+  public String getPaymentReference() {
+    return paymentReference;
+  }
+
+  public void setPaymentReference(String paymentReference) {
+    this.paymentReference = paymentReference;
+  }
+
+  public String getPaymentLast4() {
+    return paymentLast4;
+  }
+
+  public void setPaymentLast4(String paymentLast4) {
+    this.paymentLast4 = paymentLast4;
+  }
+
+  public String getInvoiceNumber() {
+    return invoiceNumber;
+  }
+
+  public void setInvoiceNumber(String invoiceNumber) {
+    this.invoiceNumber = invoiceNumber;
+  }
+
+  public Instant getDeliveredAt() {
+    return deliveredAt;
+  }
+
+  public void setDeliveredAt(Instant deliveredAt) {
+    this.deliveredAt = deliveredAt;
   }
 
   public boolean isShipped() {

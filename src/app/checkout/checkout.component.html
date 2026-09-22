@@ -1,71 +1,168 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="bg-dark text-white p-2">
-      <span class="navbar-brand ml-2">SPORTS STORE</span>
-    </div>
+<div class="checkout-shell">
+  <div class="checkout-banner">
+    <p class="eyebrow">Paiement securise</p>
+    <h1>Finaliser votre commande</h1>
+    <p>
+      Renseignez votre livraison, simulez votre paiement par carte et recevez
+      ensuite votre facture PDF ainsi qu'un email recapitulatif.
+    </p>
   </div>
+
+  @if(step === "success") {
+    <section class="checkout-card success-card">
+      <div class="success-icon">✓</div>
+      <h2>Paiement valide</h2>
+      <p>
+        Votre commande <strong>#{{ completedOrder?.id }}</strong> a bien ete enregistree.
+        Une confirmation a ete envoyee a <strong>{{ completedOrder?.username }}</strong>.
+      </p>
+      <div class="success-summary">
+        <div>
+          <span>Facture</span>
+          <strong>{{ completedOrder?.invoiceNumber }}</strong>
+        </div>
+        <div>
+          <span>Montant</span>
+          <strong>{{ completedOrder?.total | currency:"USD":"symbol":"1.2-2" }}</strong>
+        </div>
+        <div>
+          <span>Paiement</span>
+          <strong>{{ completedOrder?.paymentReference }}</strong>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" type="button" (click)="downloadInvoice()">Telecharger la facture PDF</button>
+        <a class="btn btn-outline-primary" routerLink="/dashboard">Retour au tableau de bord</a>
+      </div>
+    </section>
+  } @else {
+    <div class="checkout-layout">
+      <section class="checkout-card form-card">
+        <div class="stepper">
+          <div class="step" [class.active]="step === 'checkout'">1. Livraison</div>
+          <div class="step" [class.active]="step === 'payment'">2. Paiement</div>
+          <div class="step">3. Confirmation</div>
+        </div>
+
+        @if(step === "checkout") {
+          <form #checkoutForm="ngForm" novalidate (ngSubmit)="proceedToPayment(checkoutForm)">
+            <h2>Informations de livraison</h2>
+
+            <div class="form-grid">
+              <div class="form-group p-1">
+                <label>Nom</label>
+                <input class="form-control" #nom="ngModel" name="nom" [(ngModel)]="order.nom" required />
+                @if(submitted && nom.invalid) {
+                  <span class="text-danger">Veuillez saisir votre nom</span>
+                }
+              </div>
+
+              <div class="form-group p-1">
+                <label>Prenom</label>
+                <input class="form-control" #prenom="ngModel" name="prenom" [(ngModel)]="order.prenom" required />
+                @if(submitted && prenom.invalid) {
+                  <span class="text-danger">Veuillez saisir votre prenom</span>
+                }
+              </div>
+
+              <div class="form-group p-1 form-group-full">
+                <label>Adresse</label>
+                <input class="form-control" #adresse="ngModel" name="adresse" [(ngModel)]="order.adresse" required />
+                @if(submitted && adresse.invalid) {
+                  <span class="text-danger">Veuillez saisir votre adresse</span>
+                }
+              </div>
+
+              <div class="form-group p-1 form-group-full">
+                <label>Telephone</label>
+                <input class="form-control" #telephone="ngModel" name="telephone" [(ngModel)]="order.telephone" required />
+                @if(submitted && telephone.invalid) {
+                  <span class="text-danger">Veuillez saisir votre telephone</span>
+                }
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="btn btn-outline-secondary" routerLink="/cart">Retour au panier</a>
+              <button class="btn btn-primary" type="submit">Continuer vers le paiement</button>
+            </div>
+          </form>
+        } @else {
+          <form #paymentForm="ngForm" novalidate (ngSubmit)="submitPayment(paymentForm)">
+            <h2>Paiement par carte de credit</h2>
+            <p class="payment-hint">
+              Simulation de paiement securise. Seules les 4 dernieres chiffres sont conservees avec la commande.
+            </p>
+
+            <div class="payment-preview">
+              <div class="card-chip"></div>
+              <div class="card-number">{{ maskedCardPreview }}</div>
+              <div class="card-meta">
+                <span>{{ payment.cardHolder || "Titulaire de la carte" }}</span>
+                <span>{{ payment.expiryMonth || "MM" }}/{{ payment.expiryYear || "AA" }}</span>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group p-1 form-group-full">
+                <label>Titulaire</label>
+                <input class="form-control" name="cardHolder" [(ngModel)]="payment.cardHolder" required />
+              </div>
+
+              <div class="form-group p-1 form-group-full">
+                <label>Numero de carte</label>
+                <input class="form-control" name="cardNumber" [(ngModel)]="payment.cardNumber" required minlength="13" maxlength="19" />
+              </div>
+
+              <div class="form-group p-1">
+                <label>Mois</label>
+                <input class="form-control" name="expiryMonth" [(ngModel)]="payment.expiryMonth" required maxlength="2" />
+              </div>
+
+              <div class="form-group p-1">
+                <label>Annee</label>
+                <input class="form-control" name="expiryYear" [(ngModel)]="payment.expiryYear" required maxlength="2" />
+              </div>
+
+              <div class="form-group p-1 form-group-full">
+                <label>CVV</label>
+                <input class="form-control" name="cvv" [(ngModel)]="payment.cvv" required minlength="3" maxlength="4" />
+              </div>
+            </div>
+
+            @if(paymentError) {
+              <div class="alert alert-danger mt-3">{{ paymentError }}</div>
+            }
+
+            <div class="actions">
+              <button class="btn btn-outline-secondary" type="button" (click)="backToCheckout()">Modifier la livraison</button>
+              <button class="btn btn-primary" type="submit" [disabled]="isProcessingPayment">
+                {{ isProcessingPayment ? "Validation du paiement..." : "Payer et confirmer" }}
+              </button>
+            </div>
+          </form>
+        }
+      </section>
+
+      <aside class="checkout-card summary-card">
+        <h3>Recapitulatif</h3>
+        <div class="summary-lines">
+          @for (line of order.cart.lines; track line.product.id) {
+            <div class="summary-line">
+              <div>
+                <strong>{{ line.product.name }}</strong>
+                <div>{{ line.quantity }} x {{ line.product.price | currency:"USD":"symbol":"1.2-2" }}</div>
+              </div>
+              <span>{{ line.lineTotal | currency:"USD":"symbol":"1.2-2" }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="summary-total">
+          <span>Total a payer</span>
+          <strong>{{ order.cart.cartPrice | currency:"USD":"symbol":"1.2-2" }}</strong>
+        </div>
+      </aside>
+    </div>
+  }
 </div>
-@if(orderSent) {
-  <div class="m-2 text-center">
-    <h2>Thanks!</h2>
-    <p>Thanks for placing your order.</p>
-    <p>We'll ship your goods as soon as possible.</p>
-    <button class="btn btn-primary" routerLink="/dashboard">Retour au tableau de bord</button>
-  </div>
-} @else {
-  <div class="mx-auto w-75">
-  <form #form="ngForm" novalidate (ngSubmit)="submitOrder(form)" class="m-2">
-
-    <div class="form-group p-1">
-      <label>Nom</label>
-      <input class="form-control" #nom="ngModel" name="nom" [(ngModel)]="order.nom" required />
-      @if(submitted && nom.invalid) {
-        <span class="text-danger">
-          Veuillez saisir votre nom
-        </span>
-      }
-
-    </div>
-
-    <div class="form-group p-1">
-      <label>Prenom</label>
-      <input class="form-control" #prenom="ngModel" name="prenom" [(ngModel)]="order.prenom" required />
-      @if(submitted && prenom.invalid) {
-        <span class="text-danger">
-          Veuillez saisir votre prenom
-        </span>
-      }
-    </div>
-
-    <div class="form-group p-1">
-      <label>Adresse</label>
-      <input class="form-control" #adresse="ngModel" name="adresse" [(ngModel)]="order.adresse" required />
-      @if(submitted && adresse.invalid) {
-        <span class="text-danger">
-          Veuillez saisir votre adresse
-        </span>
-      }
-    </div>
-
-    <div class="form-group p-1">
-      <label>Telephone</label>
-      <input class="form-control" #telephone="ngModel" name="telephone" [(ngModel)]="order.telephone" required />
-      @if(submitted && telephone.invalid) {
-        <span class="text-danger">
-          Veuillez saisir votre telephone
-        </span>
-      }
-    </div>
-
-    <div class="alert alert-light border mt-3">
-      Total a payer: <strong>{{ order.cart.cartPrice | currency:"USD":"symbol":"1.2-2" }}</strong>
-    </div>
-
-    <div class="text-center">
-      <button class="btn btn-secondary m-2" routerLink="/cart">Back</button>
-      <button class="btn btn-primary m-2" type="submit">Payer et confirmer</button>
-    </div>
-
-  </form>
-  </div>
-}

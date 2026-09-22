@@ -28,15 +28,21 @@ public class OrderService {
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
   private final StoreMapper storeMapper;
+  private final InvoicePdfService invoicePdfService;
+  private final OrderNotificationService orderNotificationService;
 
   public OrderService(OrderRepository orderRepository,
                       ProductRepository productRepository,
                       UserRepository userRepository,
-                      StoreMapper storeMapper) {
+                      StoreMapper storeMapper,
+                      InvoicePdfService invoicePdfService,
+                      OrderNotificationService orderNotificationService) {
     this.orderRepository = orderRepository;
     this.productRepository = productRepository;
     this.userRepository = userRepository;
     this.storeMapper = storeMapper;
+    this.invoicePdfService = invoicePdfService;
+    this.orderNotificationService = orderNotificationService;
   }
 
   @Transactional(readOnly = true)
@@ -65,20 +71,24 @@ public class OrderService {
     order.setCreatedAt(request.getCreatedAt() != null ? request.getCreatedAt() : Instant.now());
     order.setItemCount(totals.itemCount());
     order.setTotal(totals.total());
+    order.setStatus("EN_TRAITEMENT");
+    order.setPaymentStatus(defaultValue(request.getPaymentStatus(), "PAYE"));
+    order.setPaymentMethod(defaultValue(request.getPaymentMethod(), "CARTE_CREDIT"));
+    order.setPaymentReference(defaultValue(request.getPaymentReference(), generatePaymentReference()));
+    order.setPaymentLast4(defaultValue(request.getPaymentLast4(), "0000"));
+    order.setInvoiceNumber(generateInvoiceNumber(user.getId()));
+    order.setDeliveredAt(null);
     order.setShipped(false);
     order.replaceLines(lines);
 
-    return storeMapper.toOrderDto(orderRepository.save(order));
+    CustomerOrder savedOrder = orderRepository.save(order);
+    orderNotificationService.sendOrderConfirmation(savedOrder);
+    return storeMapper.toOrderDto(savedOrder);
   }
 
   @Transactional
   public OrderDto update(Long id, OrderDto request, AuthenticatedUser currentUser) {
-    CustomerOrder order = orderRepository.findById(id)
-      .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Order not found"));
-
-    if (!currentUser.isAdmin() && !order.getUserId().equals(currentUser.getId())) {
-      throw new ResponseStatusException(FORBIDDEN, "Access denied");
-    }
+    CustomerOrder order = getOrderEntity(id, currentUser);
 
     if (!currentUser.isAdmin()) {
       throw new ResponseStatusException(FORBIDDEN, "Admin access required");
@@ -96,7 +106,32 @@ public class OrderService {
     if (request.getTelephone() != null) {
       order.setTelephone(request.getTelephone());
     }
-    order.setShipped(request.isShipped());
+
+    boolean wasDelivered = "LIVRE".equals(order.getStatus());
+    String nextStatus = request.getStatus() != null
+      ? request.getStatus()
+      : (request.isShipped() ? "LIVRE" : "EN_TRAITEMENT");
+
+    order.setStatus(nextStatus);
+    order.setShipped("LIVRE".equals(nextStatus));
+    if (order.isShipped()) {
+      order.setDeliveredAt(order.getDeliveredAt() == null ? Instant.now() : order.getDeliveredAt());
+    } else {
+      order.setDeliveredAt(null);
+    }
+
+    if (request.getPaymentStatus() != null) {
+      order.setPaymentStatus(request.getPaymentStatus());
+    }
+    if (request.getPaymentMethod() != null) {
+      order.setPaymentMethod(request.getPaymentMethod());
+    }
+    if (request.getPaymentReference() != null) {
+      order.setPaymentReference(request.getPaymentReference());
+    }
+    if (request.getPaymentLast4() != null) {
+      order.setPaymentLast4(request.getPaymentLast4());
+    }
 
     if (request.getCart() != null) {
       List<OrderLine> lines = toOrderLines(request.getCart());
@@ -106,7 +141,11 @@ public class OrderService {
       order.setTotal(totals.total());
     }
 
-    return storeMapper.toOrderDto(orderRepository.save(order));
+    CustomerOrder savedOrder = orderRepository.save(order);
+    if (!wasDelivered && "LIVRE".equals(savedOrder.getStatus())) {
+      orderNotificationService.sendDeliveryConfirmation(savedOrder);
+    }
+    return storeMapper.toOrderDto(savedOrder);
   }
 
   @Transactional
@@ -119,6 +158,23 @@ public class OrderService {
     }
 
     orderRepository.delete(order);
+  }
+
+  @Transactional(readOnly = true)
+  public byte[] generateInvoice(Long id, AuthenticatedUser currentUser) {
+    CustomerOrder order = getOrderEntity(id, currentUser);
+    return invoicePdfService.generate(storeMapper.toOrderDto(order));
+  }
+
+  private CustomerOrder getOrderEntity(Long id, AuthenticatedUser currentUser) {
+    CustomerOrder order = orderRepository.findById(id)
+      .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Order not found"));
+
+    if (!currentUser.isAdmin() && !order.getUserId().equals(currentUser.getId())) {
+      throw new ResponseStatusException(FORBIDDEN, "Access denied");
+    }
+
+    return order;
   }
 
   private List<OrderLine> toOrderLines(StoredCartDto cart) {
@@ -154,6 +210,18 @@ public class OrderService {
     }
 
     return new OrderTotals(itemCount, total);
+  }
+
+  private String generatePaymentReference() {
+    return "PAY-" + Instant.now().toEpochMilli();
+  }
+
+  private String generateInvoiceNumber(Long userId) {
+    return "INV-" + userId + "-" + Instant.now().toEpochMilli();
+  }
+
+  private String defaultValue(String value, String fallback) {
+    return value == null || value.isBlank() ? fallback : value;
   }
 
   private record OrderTotals(int itemCount, BigDecimal total) {

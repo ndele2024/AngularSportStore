@@ -35,6 +35,9 @@ public class SecurityConfig {
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/login", "/register", "/error").permitAll()
+        // Interroge par le healthcheck Docker, jamais expose publiquement :
+        // nginx ne relaie pas /api/actuator vers l'exterieur.
+        .requestMatchers("/actuator/health").permitAll()
         .requestMatchers(HttpMethod.GET, "/products").permitAll()
         .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
         .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")

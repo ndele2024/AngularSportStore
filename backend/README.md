@@ -34,6 +34,13 @@ mvn spring-boot:run
 
 Le backend ecoute par defaut sur le port `3500` pour rester compatible avec le frontend actuel.
 
+Fonctionnalites commande:
+
+- creation de commande avec paiement carte simule
+- generation d'une facture PDF via `GET /orders/{id}/invoice`
+- preparation automatique des emails HTML de confirmation et de livraison dans `backend/build/emails`
+- changement de statut de commande de `EN_TRAITEMENT` a `LIVRE` depuis l'admin
+
 Variables utiles:
 
 - `DB_URL` default `jdbc:postgresql://localhost:5432/sportstore`

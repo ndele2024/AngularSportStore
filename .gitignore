@@ -43,6 +43,7 @@ Thumbs.db
 
 # Spring Boot / Java
 **/target/
+**/build/
 **/.mvn/
 *.class
 

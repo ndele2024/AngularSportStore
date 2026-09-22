@@ -39,14 +39,14 @@ export class DashboardComponent {
 
   get recentPurchases(): Order[] {
     return this.userOrders
-      .filter(order => order.shipped)
+      .filter(order => order.status === "LIVRE" || order.shipped)
       .sort((left, right) => (right.createdAt ?? "").localeCompare(left.createdAt ?? ""))
       .slice(0, 5);
   }
 
   get activeOrders(): Order[] {
     return this.userOrders
-      .filter(order => !order.shipped)
+      .filter(order => order.status !== "LIVRE" && !order.shipped)
       .sort((left, right) => (right.createdAt ?? "").localeCompare(left.createdAt ?? ""));
   }
 

@@ -14,6 +14,13 @@ public class OrderDto {
   private Instant createdAt;
   private BigDecimal total;
   private Integer itemCount;
+  private String status;
+  private String paymentStatus;
+  private String paymentMethod;
+  private String paymentReference;
+  private String paymentLast4;
+  private String invoiceNumber;
+  private Instant deliveredAt;
   private boolean shipped;
   private StoredCartDto cart;
 
@@ -95,6 +102,62 @@ public class OrderDto {
 
   public void setItemCount(Integer itemCount) {
     this.itemCount = itemCount;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getPaymentStatus() {
+    return paymentStatus;
+  }
+
+  public void setPaymentStatus(String paymentStatus) {
+    this.paymentStatus = paymentStatus;
+  }
+
+  public String getPaymentMethod() {
+    return paymentMethod;
+  }
+
+  public void setPaymentMethod(String paymentMethod) {
+    this.paymentMethod = paymentMethod;
+  }
+
+  public String getPaymentReference() {
+    return paymentReference;
+  }
+
+  public void setPaymentReference(String paymentReference) {
+    this.paymentReference = paymentReference;
+  }
+
+  public String getPaymentLast4() {
+    return paymentLast4;
+  }
+
+  public void setPaymentLast4(String paymentLast4) {
+    this.paymentLast4 = paymentLast4;
+  }
+
+  public String getInvoiceNumber() {
+    return invoiceNumber;
+  }
+
+  public void setInvoiceNumber(String invoiceNumber) {
+    this.invoiceNumber = invoiceNumber;
+  }
+
+  public Instant getDeliveredAt() {
+    return deliveredAt;
+  }
+
+  public void setDeliveredAt(Instant deliveredAt) {
+    this.deliveredAt = deliveredAt;
   }
 
   public boolean isShipped() {

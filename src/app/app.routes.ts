@@ -11,11 +11,13 @@ import {OrderTableComponent} from './order-table/order-table.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {UserGuard} from './guard/user.guard';
 import {ProfileComponent} from './profile/profile.component';
+import {MyOrdersComponent} from './my-orders/my-orders.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "dashboard", pathMatch: "full" },
   { path: "dashboard", component: DashboardComponent },
   { path: "profile", component: ProfileComponent, canActivate:[UserGuard] },
+  { path: "my-orders", component: MyOrdersComponent, canActivate:[UserGuard] },
   { path: "store", component: StoreComponent },
   { path: "cart", component: CartDetailComponent },
   { path: "checkout", component: CheckoutComponent, canActivate:[UserGuard] },

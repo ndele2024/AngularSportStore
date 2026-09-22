@@ -32,6 +32,8 @@ builder.Services.AddDbContext<SportStoreDbContext>(options =>
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<StoreMapper>();
 builder.Services.AddScoped<DataSeeder>();
+builder.Services.AddScoped<InvoicePdfService>();
+builder.Services.AddScoped<OrderNotificationService>();
 
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret));

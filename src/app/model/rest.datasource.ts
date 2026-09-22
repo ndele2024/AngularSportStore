@@ -5,9 +5,7 @@ import { Product } from "./product.model";
 import { Order } from "./order.model";
 import {AuthResponse, User} from "./user.model";
 import {StoredCart} from "./cart.model";
-
-const PROTOCOL = "http";
-const PORT = 3500;
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class RestDataSource {
@@ -15,7 +13,9 @@ export class RestDataSource {
   auth_token? : string;
 
   constructor(private http: HttpClient) {
-    this.baseUrl = `${PROTOCOL}://localhost:${PORT}/`;
+    // URL relative : le meme bundle fonctionne en local derriere le proxy de
+    // « ng serve » et en production derriere nginx, sans recompilation.
+    this.baseUrl = `${environment.apiUrl}/`;
   }
 
   getProducts(): Observable<Product[]> {
@@ -24,6 +24,13 @@ export class RestDataSource {
 
   saveOrder(order: Order): Observable<Order> {
     return this.http.post<Order>(this.baseUrl + "orders", order, this.getOptions());
+  }
+
+  downloadInvoice(orderId: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}orders/${orderId}/invoice`, {
+      ...this.getOptions(),
+      responseType: "blob"
+    });
   }
 
   authenticate(user: string, pass: string): Observable<AuthResponse> {

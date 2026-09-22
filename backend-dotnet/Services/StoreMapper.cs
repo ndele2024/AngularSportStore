@@ -33,6 +33,13 @@ public class StoreMapper
             CreatedAt = DateTime.SpecifyKind(order.CreatedAt, DateTimeKind.Utc),
             Total = order.Total,
             ItemCount = order.ItemCount,
+            Status = order.Status,
+            PaymentStatus = order.PaymentStatus,
+            PaymentMethod = order.PaymentMethod,
+            PaymentReference = order.PaymentReference,
+            PaymentLast4 = order.PaymentLast4,
+            InvoiceNumber = order.InvoiceNumber,
+            DeliveredAt = order.DeliveredAt is null ? null : DateTime.SpecifyKind(order.DeliveredAt.Value, DateTimeKind.Utc),
             Shipped = order.Shipped,
             Cart = ToStoredCartFromOrderLines(order.Lines)
         };

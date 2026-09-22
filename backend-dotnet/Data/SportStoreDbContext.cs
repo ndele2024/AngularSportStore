@@ -29,6 +29,14 @@ public class SportStoreDbContext(DbContextOptions<SportStoreDbContext> options) 
             .Property(o => o.Total)
             .HasPrecision(12, 2);
 
+        modelBuilder.Entity<CustomerOrder>()
+            .HasIndex(o => o.PaymentReference)
+            .IsUnique();
+
+        modelBuilder.Entity<CustomerOrder>()
+            .HasIndex(o => o.InvoiceNumber)
+            .IsUnique();
+
         modelBuilder.Entity<AppUser>()
             .HasMany(u => u.CartLines)
             .WithOne(c => c.User)

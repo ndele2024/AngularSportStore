@@ -22,6 +22,7 @@
       <div class="header-actions">
         <a class="btn btn-outline-light btn-sm" routerLink="/dashboard">Tableau de bord</a>
         @if (auth.authenticated) {
+          <a class="btn btn-outline-light btn-sm" routerLink="/my-orders">Mes commandes</a>
           <a class="btn btn-outline-light btn-sm" [routerLink]="auth.isAdmin ? '/admin' : '/profile'">
             {{ auth.isAdmin ? "Admin" : "Mon compte" }}
           </a>

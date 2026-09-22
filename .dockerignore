@@ -1,0 +1,12 @@
+node_modules
+dist
+.angular
+.git
+.idea
+.vscode
+# Le Dockerfile racine ne construit que le front.
+backend
+backend-dotnet
+backend-dotnet.tests
+*.zip
+*.log
