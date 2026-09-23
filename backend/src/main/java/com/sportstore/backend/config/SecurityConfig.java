@@ -1,7 +1,9 @@
 package com.sportstore.backend.config;
 
 import com.sportstore.backend.security.JwtAuthenticationFilter;
+import java.util.Arrays;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,8 +25,23 @@ public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-  public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+  /**
+   * Origines acceptees, separees par des virgules. En production, le frontend et
+   * l'API partagent le sous-domaine : il n'y a donc aucune requete croisee. Mais
+   * les navigateurs envoient tout de meme l'en-tete « Origin » sur les requetes
+   * POST, PUT et DELETE de meme origine — si elle ne figure pas ici, Spring
+   * Security repond 403 et la connexion, les commandes et le paiement echouent.
+   */
+  private final List<String> allowedOrigins;
+
+  public SecurityConfig(
+      JwtAuthenticationFilter jwtAuthenticationFilter,
+      @Value("${app.cors.allowed-origins}") String allowedOrigins) {
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    this.allowedOrigins = Arrays.stream(allowedOrigins.split(","))
+        .map(String::trim)
+        .filter(origine -> !origine.isEmpty())
+        .toList();
   }
 
   @Bean
@@ -58,7 +75,7 @@ public class SecurityConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
+    configuration.setAllowedOriginPatterns(allowedOrigins);
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);

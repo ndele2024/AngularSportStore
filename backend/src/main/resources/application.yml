@@ -33,5 +33,9 @@ management:
       show-details: never
 
 app:
+  cors:
+    # Surcharge par la variable CORS_ORIGINS en production. Motifs acceptes :
+    # « http://localhost:* » autorise n'importe quel port local.
+    allowed-origins: ${CORS_ORIGINS:http://localhost:*,http://127.0.0.1:*}
   jwt:
     secret: ${JWT_SECRET:dev-secret-key-for-sport-store-application-please-change}

@@ -1,5 +1,11 @@
 server:
   port: 3500
+  # Le front et l'API partagent l'origine derriere nginx : tout ce qui commence
+  # par « /api » est relaye vers ce service, le reste sert l'application Angular.
+  servlet:
+    context-path: /api
+  error:
+    include-stacktrace: never
 
 spring:
   datasource:
@@ -17,6 +23,19 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
 app:
+  cors:
+    # Surcharge par la variable CORS_ORIGINS en production. Motifs acceptes :
+    # « http://localhost:* » autorise n'importe quel port local.
+    allowed-origins: ${CORS_ORIGINS:http://localhost:*,http://127.0.0.1:*}
   jwt:
     secret: ${JWT_SECRET:dev-secret-key-for-sport-store-application-please-change}

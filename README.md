@@ -1,82 +1,142 @@
 # SportStore
 
-Application e-commerce composee de :
+Boutique en ligne d'articles de sport : catalogue, panier, paiement par carte
+simulé, facture PDF téléchargeable et courriels HTML de confirmation et de
+livraison préparés côté serveur.
 
-- un frontend Angular dans la racine du projet
-- un backend officiel Spring Boot dans [backend](/C:/Users/18192/OneDrive%20-%20Universit%C3%A9%20du%20Qu%C3%A9bec%20%C3%A0%20Trois-Rivi%C3%A8res/Bureau/travail_css/angular/sportStore/backend)
-- un backend alternatif ASP.NET Core dans [backend-dotnet](/C:/Users/18192/OneDrive%20-%20Universit%C3%A9%20du%20Qu%C3%A9bec%20%C3%A0%20Trois-Rivi%C3%A8res/Bureau/travail_css/angular/sportStore/backend-dotnet)
+**Démonstration en ligne : <https://sportstore.romualdasonmene.cloud>**
 
-L'application n'utilise plus `json-server`, `data.js` ni `authMiddleware.js`.
+| | |
+| --- | --- |
+| Frontend | Angular 19, à la racine du dépôt |
+| Backend | Spring Boot 3.4 / Java 21, PostgreSQL — dossier [`backend/`](backend) |
+| Backend alternatif | ASP.NET Core 9 — dossier [`backend-dotnet/`](backend-dotnet), **non déployé** |
 
-Le checkout inclut maintenant un paiement carte simule, une facture PDF telechargeable et la preparation automatique d'emails HTML de confirmation/livraison cote backend.
+Le frontend est branché définitivement sur le backend Spring Boot. Le backend
+.NET est conservé comme exercice comparatif, avec sa propre suite de tests,
+mais il ne participe pas au déploiement.
 
-## Architecture officielle
+---
 
-Le frontend Angular est maintenant branche definitivement sur le backend **Spring Boot + PostgreSQL** expose sur :
+## Comptes de démonstration
 
-```text
-http://localhost:3500
-```
+Créés au premier démarrage par
+[`DataInitializer`](backend/src/main/java/com/sportstore/backend/config/DataInitializer.java),
+uniquement si la table des utilisateurs est vide.
 
-## Lancer le frontend
+| Identifiant | Mot de passe | Rôle | Ce qu'il permet |
+| --- | --- | --- | --- |
+| `admin` | `secret` | ADMIN | Créer, modifier et supprimer des produits, consulter les utilisateurs |
+| `jane` | `password` | USER | Commander, consulter ses commandes, télécharger ses factures |
 
-```bash
-npm install
-npm start
-```
+Le catalogue initial compte 9 produits répartis en trois catégories :
+*Watersports*, *Soccer* et *Chess*.
 
-Frontend : `http://localhost:4200`
+> Ces identifiants sont publics et l'espace d'administration modifie réellement
+> la base. Sur l'instance de démonstration, un visiteur peut donc altérer le
+> catalogue. La sauvegarde quotidienne du serveur permet de revenir en arrière.
 
-## Lancer le backend Spring Boot
+---
 
-Depuis la racine :
+## Développement local
 
-```bash
-npm run backend:start
-```
-
-ou directement :
-
-```bash
-cd backend
-mvn spring-boot:run
-```
-
-API Spring : `http://localhost:3500`
-
-## Lancer les tests
-
-Frontend Angular :
+### Backend
 
 ```bash
-npm test
+cd backend && mvn spring-boot:run
 ```
 
-Backend Spring :
+L'API écoute sur `http://localhost:3500/api`. Le préfixe `/api` vient de
+`server.servlet.context-path` : en production, nginx sert le frontend et relaie
+tout ce qui commence par `/api` vers ce service, ce qui place les deux sur la
+même origine et supprime toute question d'origine croisée.
+
+Une base PostgreSQL est nécessaire. La plus simple :
 
 ```bash
-npm run backend:test
+cd backend && docker compose up -d
 ```
 
-Backend .NET :
+### Frontend
 
 ```bash
+npm install && npm start
+```
+
+L'application est sur `http://localhost:4200`. `ng serve` relaie `/api` vers le
+backend grâce à [`proxy.conf.json`](proxy.conf.json), si bien que l'URL de
+l'API reste relative en développement comme en production : le même bundle
+fonctionne dans les deux cas, sans recompilation.
+
+### Tests
+
+```bash
+npm test                    # frontend Angular
+cd backend && mvn test      # backend Spring Boot
 dotnet test backend-dotnet.tests/SportStore.Api.Tests.csproj
 ```
 
-## Build Angular
+---
+
+## API
+
+Toutes les routes sont préfixées par `/api`.
+
+| Méthode | Route | Accès |
+| --- | --- | --- |
+| `POST` | `/login`, `/register` | public |
+| `GET` | `/products` | public |
+| `POST` `PUT` `DELETE` | `/products`, `/products/{id}` | ADMIN |
+| `GET` `POST` | `/orders` | connecté |
+| `PUT` `DELETE` | `/orders/{id}` | ADMIN |
+| `GET` | `/orders/{id}/invoice` | propriétaire de la commande |
+| `GET` | `/users` | ADMIN |
+
+L'authentification se fait par jeton JWT, transmis dans l'en-tête
+`Authorization: Bearer <jeton>`.
+
+---
+
+## Déploiement
+
+Les images sont construites par GitHub Actions
+([`.github/workflows/publish.yml`](.github/workflows/publish.yml)) et publiées
+sur GHCR. Le serveur ne compile jamais : il récupère les images et bascule.
+
+| Image | Contenu |
+| --- | --- |
+| `ghcr.io/ndele2024/sportstore-web` | bundle Angular servi par nginx, qui relaie `/api` |
+| `ghcr.io/ndele2024/sportstore-api` | JAR Spring Boot sur une JVM sans privilège |
+
+Construction locale des deux images, pour vérification :
 
 ```bash
-npm run build
+docker build -t sportstore-web .
+docker build -t sportstore-api ./backend
 ```
 
-## Dossiers utiles
+### Variables d'environnement du backend
 
-- [src](/C:/Users/18192/OneDrive%20-%20Universit%C3%A9%20du%20Qu%C3%A9bec%20%C3%A0%20Trois-Rivi%C3%A8res/Bureau/travail_css/angular/sportStore/src) : frontend Angular
-- [backend](/C:/Users/18192/OneDrive%20-%20Universit%C3%A9%20du%20Qu%C3%A9bec%20%C3%A0%20Trois-Rivi%C3%A8res/Bureau/travail_css/angular/sportStore/backend) : backend Spring Boot officiel
-- [backend-dotnet](/C:/Users/18192/OneDrive%20-%20Universit%C3%A9%20du%20Qu%C3%A9bec%20%C3%A0%20Trois-Rivi%C3%A8res/Bureau/travail_css/angular/sportStore/backend-dotnet) : backend alternatif .NET
-- [backend-dotnet.tests](/C:/Users/18192/OneDrive%20-%20Universit%C3%A9%20du%20Qu%C3%A9bec%20%C3%A0%20Trois-Rivi%C3%A8res/Bureau/travail_css/angular/sportStore/backend-dotnet.tests) : tests du backend .NET
+| Variable | Rôle |
+| --- | --- |
+| `DB_URL` `DB_USERNAME` `DB_PASSWORD` | connexion PostgreSQL |
+| `JWT_SECRET` | clé de signature des jetons, **à remplacer en production** |
+| `JAVA_OPTS` | réglages JVM ; `-XX:MaxRAMPercentage` adapte le tas à la limite du conteneur |
 
-## Note
+La sonde de santé `/api/actuator/health` est interrogée par le healthcheck
+Docker. Elle n'est pas relayée par nginx : elle reste interne.
 
-Les scripts `backend:start` et `backend:test` supposent que `mvn` est disponible dans le `PATH`.
+---
+
+## Structure
+
+```
+src/                 frontend Angular
+  environments/      apiUrl, remplacé à la construction en production
+backend/             API Spring Boot (déployée)
+backend-dotnet/      API ASP.NET Core (non déployée)
+backend-dotnet.tests/
+nginx.conf           configuration du conteneur web
+Dockerfile           image du frontend
+backend/Dockerfile   image de l'API
+```
