@@ -46,6 +46,25 @@
         <button class="btn btn-secondary m-1" routerLink="/dashboard">Retour</button>
         <button class="btn btn-primary m-1" type="submit">Se connecter</button>
       </div>
+
+      <div class="demo-panel mt-4">
+        <p class="demo-panel__title">Comptes de demonstration</p>
+        <p class="demo-panel__hint">Cliquez sur un compte pour remplir le formulaire.</p>
+        <div class="demo-panel__list">
+          <button type="button" class="demo-account"
+                  (click)="useDemoAccount('jane', 'password')">
+            <span class="demo-account__role">Client</span>
+            <span class="demo-account__ids"><code>jane</code> / <code>password</code></span>
+            <span class="demo-account__desc">Commander, suivre ses commandes, telecharger ses factures</span>
+          </button>
+          <button type="button" class="demo-account"
+                  (click)="useDemoAccount('admin', 'secret')">
+            <span class="demo-account__role">Administrateur</span>
+            <span class="demo-account__ids"><code>admin</code> / <code>secret</code></span>
+            <span class="demo-account__desc">Gerer le catalogue et les commandes</span>
+          </button>
+        </div>
+      </div>
     </form>
   } @else {
     <form novalidate #registerForm="ngForm" (ngSubmit)="register(registerForm)">

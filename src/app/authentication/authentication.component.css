@@ -21,3 +21,72 @@ label {
     padding: 1.2rem !important;
   }
 }
+
+/* Panneau des comptes de demonstration. Volontairement discret : il informe
+   sans concurrencer le formulaire, et disparait de la vue d'un utilisateur
+   reel qui connait deja ses identifiants. */
+.demo-panel {
+  background: rgba(13, 110, 253, 0.04);
+  border: 1px dashed #b6d4fe;
+  border-radius: 14px;
+  padding: 1rem 1.1rem 1.1rem;
+}
+
+.demo-panel__title {
+  color: #173250;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.demo-panel__hint {
+  color: #5b7a99;
+  font-size: 0.82rem;
+  margin: 0.15rem 0 0.8rem;
+}
+
+.demo-panel__list {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.demo-account {
+  background: #fff;
+  border: 1px solid #d9e7f5;
+  border-radius: 11px;
+  cursor: pointer;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.demo-account:hover,
+.demo-account:focus-visible {
+  border-color: #0d6efd;
+  box-shadow: 0 4px 14px rgba(13, 110, 253, 0.14);
+}
+
+.demo-account__role {
+  color: #0d6efd;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.demo-account__ids code {
+  background: #eef4fb;
+  border-radius: 5px;
+  color: #173250;
+  font-size: 0.85rem;
+  padding: 0.1rem 0.35rem;
+}
+
+.demo-account__desc {
+  color: #5b7a99;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}

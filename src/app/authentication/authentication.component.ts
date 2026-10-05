@@ -65,6 +65,17 @@ export class AuthenticationComponent {
     });
   }
 
+  /**
+   * Pre-remplit le formulaire avec un compte de demonstration. Afficher les
+   * identifiants ne suffit pas : sur un portfolio, le visiteur ne doit pas avoir
+   * a les recopier a la main pour decouvrir l'application.
+   */
+  useDemoAccount(username: string, password: string) {
+    this.userName = username;
+    this.passwd = password;
+    this.errorMessage = undefined;
+  }
+
   setMode(mode: "login" | "register") {
     this.mode = mode;
     this.errorMessage = undefined;

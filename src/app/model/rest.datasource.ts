@@ -23,7 +23,57 @@ export class RestDataSource {
   }
 
   saveOrder(order: Order): Observable<Order> {
-    return this.http.post<Order>(this.baseUrl + "orders", order, this.getOptions());
+    return this.http.post<Order>(this.baseUrl + "orders", this.toOrderPayload(order), this.getOptions());
+  }
+
+  /**
+   * Transforme la commande en objet plat avant l'envoi.
+   *
+   * Le modele de panier injecte porte, a l'execution, les services qu'Angular
+   * lui a injectes : « private » n'existe qu'a la compilation, pas dans le
+   * JavaScript produit. Le graphe obtenu est circulaire — panier vers service
+   * d'authentification vers HttpClient vers injecteur — et JSON.stringify leve
+   * une TypeError avant meme que la requete ne parte. Aucun appel n'atteignait
+   * donc le serveur, et l'appelant ne voyait qu'une erreur generique.
+   *
+   * On n'envoie ici que les champs attendus par l'API.
+   */
+  private toOrderPayload(order: Order) {
+    return {
+      id: order.id,
+      userId: order.userId,
+      username: order.username,
+      nom: order.nom,
+      prenom: order.prenom,
+      adresse: order.adresse,
+      telephone: order.telephone,
+      createdAt: order.createdAt,
+      total: order.total,
+      itemCount: order.itemCount,
+      status: order.status,
+      paymentStatus: order.paymentStatus,
+      paymentMethod: order.paymentMethod,
+      paymentReference: order.paymentReference,
+      paymentLast4: order.paymentLast4,
+      invoiceNumber: order.invoiceNumber,
+      deliveredAt: order.deliveredAt,
+      shipped: order.shipped,
+      cart: {
+        itemCount: order.cart?.itemCount,
+        cartPrice: order.cart?.cartPrice,
+        lines: (order.cart?.lines ?? []).map(ligne => ({
+          product: {
+            id: ligne.product?.id,
+            name: ligne.product?.name,
+            category: ligne.product?.category,
+            description: ligne.product?.description,
+            price: ligne.product?.price,
+            imageUrl: ligne.product?.imageUrl
+          },
+          quantity: ligne.quantity
+        }))
+      }
+    };
   }
 
   downloadInvoice(orderId: number): Observable<Blob> {
@@ -102,7 +152,7 @@ export class RestDataSource {
   updateOrder(order: Order): Observable<Order> {
     return this.http.put<Order>(
       `${this.baseUrl}orders/${order.id}`,
-      order,
+      this.toOrderPayload(order),
       this.getOptions()
     );
   }
